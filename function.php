@@ -3,6 +3,15 @@
 use elish\core\ErrorHandler;
 use elish\core\Logger;
 
+// 如果是在vendor目录下，定义BASEPATH
+if (!defined('BASEPATH') && basename(dirname(__DIR__, 2)) == 'vendor') {
+    define('BASEPATH', realpath(dirname(__DIR__, 3)) . DIRECTORY_SEPARATOR);
+}
+
+// 时区
+if (!empty($_ENV['TZ'])) {
+    date_default_timezone_set($_ENV['TZ']);
+}
 
 (new ErrorHandler())->register();
 
