@@ -1,0 +1,27 @@
+{
+  "name": "faysoft/elish",
+  "description": "工具方法",
+  "type": "library",
+  "authors": [
+    {
+      "name": "fayfox",
+      "email": "admin@fayfox.com",
+      "homepage": "http://www.fayfox.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-zip": "*",
+    "ext-pdo": "*",
+    "ext-openssl": "*",
+    "gregwar/captcha": "^1.1",
+    "illuminate/validation": "^8.83",
+    "monolog/monolog": "^2.9"
+  },
+  "autoload": {
+    "psr-4": {"elish\\": ""},
+    "files": ["function.php"]
+  }
+}
