@@ -136,10 +136,11 @@ function render(string $__view_file__, array $__data__ = []): string
 {
     ob_start();
     extract($__data__);
-    if (file_exists(__DIR__ . '/web/' . $__view_file__ . '.php')) {
-        require __DIR__ . '/web/' . $__view_file__ . '.php';
-    } else if (file_exists(__DIR__ . '/web/' . $__view_file__ . '/index.php')) {
-        require __DIR__ . '/web/' . $__view_file__ . '/index.php';
+    $__base__path__ = defined('BASEPATH') ? BASEPATH : __DIR__ . '/';
+    if (file_exists($__base__path__ . 'web/' . $__view_file__ . '.php')) {
+        require $__base__path__ . 'web/' . $__view_file__ . '.php';
+    } else if (file_exists($__base__path__ . 'web/' . $__view_file__ . '/index.php')) {
+        require $__base__path__ . 'web/' . $__view_file__ . '/index.php';
     } else {
         throw new RuntimeException("视图[{$__view_file__}]不存在");
     }
