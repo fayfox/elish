@@ -9,12 +9,12 @@ class UrlHelper
 
     /**
      * 构建站内url
-     * @param string $router 若为null，则返回首页，否则根据$base_url构建url
+     * @param string|null $router 若为null，则返回首页，否则根据$base_url构建url
      * @param array $params 链接参数
      * @param string $anchor 锚点
      * @return mixed|string
      */
-    public static function create($router = null, $params = array(), $anchor = ''): string
+    public static function create(?string $router = null, array $params = [], string $anchor = ''): string
     {
         $base_url = self::getBaseUrl();
         if ($router === null) {
@@ -42,7 +42,7 @@ class UrlHelper
      * 获取根目录
      * @return string
      */
-    public static function getBaseUrl()
+    public static function getBaseUrl(): string
     {
         static $baseUrl;
 
@@ -64,7 +64,7 @@ class UrlHelper
      * @param string $uri
      * @return string
      */
-    public static function assets($uri)
+    public static function assets(string $uri): string
     {
         return self::getBaseUrl() . $uri;
     }

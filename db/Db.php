@@ -2,13 +2,11 @@
 
 namespace elish\db;
 
-use elish\service\DatabaseService;
-
 class Db
 {
-    private static $_instance = [];
-    private $pdo;
-    public $operators = array('AND', 'OR', 'AND NOT', 'OR NOT');
+    private static array $_instance = [];
+    private \PDO $pdo;
+    public array $operators = ['AND', 'OR', 'AND NOT', 'OR NOT'];
 
     private function __construct()
     {
@@ -49,12 +47,7 @@ class Db
      */
     public static function getConfigs($configFile): array
     {
-        $configInDb = DatabaseService::service()->get($configFile);
-        if (!$configInDb) {
-            throw new \RuntimeException("db config {$configFile} not found");
-        }
-
-        return $configInDb;
+        throw new \RuntimeException('Method not implemented');
     }
 
     protected function init($configs)
@@ -131,13 +124,13 @@ class Db
      * @param array|bool|false|string $condition 条件，若为false，则更新所有字段
      * @return int
      */
-    public function update($table, $data, $condition = false)
+    public function update(string $table, array $data, $condition = false): int
     {
         if (empty($data)) {
-            throw new RuntimeException('更新数据不能为空');
+            throw new \RuntimeException('更新数据不能为空');
         }
         if (!$condition) {
-            throw new RuntimeException('出于安全考虑，不允许where条件为空的update操作');
+            throw new \RuntimeException('出于安全考虑，不允许where条件为空的update操作');
         }
 
         $set = [];
@@ -184,9 +177,9 @@ class Db
                     }
                     if (is_int($key)) {//'id = 1'
                         $condition .= $value;
-                    } else {//'id = ?'=>1
+                    } else {// 'id = ?'=>1
                         if (!$this->_hasOperator($key)) {//'id'=>1
-                            //不带操作符的key，默认为等于
+                            // 不带操作符的key，默认为等于
                             $key .= ' = ?';
                         }
                         if (is_array($value)) {
@@ -201,15 +194,15 @@ class Db
                     }
                 }
             }
-            return array(
+            return [
                 'condition' => $condition,
                 'params' => $params,
-            );
+            ];
         } else {
-            return array(
+            return [
                 'condition' => $where,
                 'params' => [],
-            );
+            ];
         }
     }
 
@@ -239,10 +232,10 @@ class Db
             }
         }
         $condition = ' ( ' . implode($op, $partial_condition) . ' ) ';
-        return array(
+        return [
             'condition' => $condition,
             'params' => $params
-        );
+        ];
     }
 
     /**
@@ -250,7 +243,7 @@ class Db
      * @param string $str
      * @return bool
      */
-    protected function _hasOperator($str)
+    protected function _hasOperator(string $str): bool
     {
         return (bool)preg_match('/(<|>|!|=|\sIS NULL|\sIS NOT NULL|\sEXISTS|\sBETWEEN|\sLIKE|\sIN\s*\(|\s)/i', trim($str));
     }

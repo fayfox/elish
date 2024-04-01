@@ -14,7 +14,7 @@ class Registration
 {
     public static function register(Application $application, $subDir = '')
     {
-        $baseDir = BASEPATH . '/command/';
+        $baseDir = BASEPATH . 'command/';
         $files = scandir($baseDir . $subDir);
         foreach ($files as $file) {
             $newSubdir = ($subDir ? $subDir . DIRECTORY_SEPARATOR . $file : $file);
