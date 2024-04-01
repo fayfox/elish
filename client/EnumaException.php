@@ -2,7 +2,7 @@
 
 namespace elish\client;
 
-class CallServerException extends \RuntimeException
+class EnumaException extends \RuntimeException
 {
     private $resp;
     private ?int $httpCode;

@@ -69,12 +69,12 @@ class Enuma
         curl_close($curl);
 
         if ($httpCode == 0 && !$content) {
-            throw new CallServerException("内部请求异常: 请求server失败");
+            throw new EnumaException("内部请求异常: 请求server失败");
         }
 
         $jsonData = json_decode($content, true);
         if ($httpCode >= 400) {
-            throw new CallServerException("内部请求异常[{$httpCode}]: {$content}", $httpCode, $jsonData ?: $content);
+            throw new EnumaException("内部请求异常[{$httpCode}]: {$content}", $httpCode, $jsonData ?: $content);
         }
 
         if ($jsonData !== null) {
