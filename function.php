@@ -28,9 +28,13 @@ function pr($val)
  */
 function dump($var, int $depth = 10)
 {
-    $output = '';
-    dumpInternal($var, $depth, $output);
-    echo '<pre>', $output, "\n</pre>";
+    if (php_sapi_name() == 'cli' || defined('STDIN')) {
+        var_dump($var);
+    } else {
+        $output = '';
+        dumpInternal($var, $depth, $output);
+        echo '<pre>', $output, "\n</pre>";
+    }
 }
 
 function dumpInternal($var, $depth = 10, &$output = '', $level = 0)
@@ -113,17 +117,10 @@ function dumpInternal($var, $depth = 10, &$output = '', $level = 0)
  */
 function dd()
 {
-    if (php_sapi_name() == 'cli' || defined('STDIN')) {
-        array_map(function ($x) {
-            var_dump($x);
-        }, func_get_args());
-        die;
-    } else {
-        array_map(function ($x) {
-            dump($x);
-        }, func_get_args());
-        die;
-    }
+    array_map(function ($x) {
+        dump($x);
+    }, func_get_args());
+    die;
 }
 
 /**

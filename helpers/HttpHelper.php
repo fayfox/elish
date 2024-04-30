@@ -3,20 +3,46 @@
 namespace elish\helpers;
 
 
+use elish\core\Logger;
+
 class HttpHelper
 {
-
-    public static function get($uri, $params = [])
+    /**
+     * 发起GET请求
+     *
+     * @param string $uri
+     * @param array $params
+     * @return mixed
+     */
+    public static function get(string $uri, array $params = [])
     {
         return self::exec('GET', $uri, $params);
     }
 
-    public static function post($uri, $body, $params = [])
+    /**
+     * 发起POST请求
+     *
+     * @param string $uri
+     * @param mixed $body
+     * @param array $params
+     * @return mixed
+     */
+    public static function post(string $uri, $body, array $params = [])
     {
         return self::exec('POST', $uri, $params, $body);
     }
 
-    public static function exec($method, $url, $params = [], $body = null, $headers = [])
+    /**
+     * 发起HTTP请求
+     *
+     * @param string $method
+     * @param string $url
+     * @param array $params
+     * @param mixed $body
+     * @param array $headers
+     * @return mixed
+     */
+    public static function exec(string $method, string $url, array $params = [], $body = null, array $headers = [])
     {
         $curl = curl_init();
         if ($params) {
@@ -39,7 +65,7 @@ class HttpHelper
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 30,
+            CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
@@ -55,10 +81,17 @@ class HttpHelper
 
         $content = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpCode == 0 && !$content) {
-            throw new \RuntimeException("HTTP请求失败");
+        try {
+            if ($httpCode == 0 && !$content) {
+                Logger::get()->error("HTTP请求失败[{$httpCode}]: {$content}", [
+                    'method' => $method,
+                    'url' => $url,
+                    'body' => $body
+                ]);
+                throw new \RuntimeException("HTTP请求失败: " . curl_error($curl));
+            }
+        } finally {
+            curl_close($curl);
         }
 
         $jsonData = json_decode($content, true);
