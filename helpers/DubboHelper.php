@@ -25,6 +25,11 @@ class DubboHelper
      */
     public static function call(string $webHost, string $serviceBeanName, string $method, array $params = [])
     {
-        return HttpHelper::post("http://{$webHost}/debugger/service/call/{$serviceBeanName}/{$method}", $params);
+        $result = HttpHelper::post("http://{$webHost}/debugger/service/call/{$serviceBeanName}/{$method}", $params);
+        if (is_array($result) && array_key_exists('className', $result) && array_key_exists('msg', $result) && array_key_exists('stackTrace', $result)) {
+            throw new \RuntimeException("调用dubbo接口失败: {$result['msg']}");
+        }
+
+        return $result;
     }
 }

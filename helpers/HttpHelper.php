@@ -83,12 +83,12 @@ class HttpHelper
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         try {
             if ($httpCode == 0 && !$content) {
-                Logger::get()->error("HTTP请求失败[{$httpCode}]: {$content}", [
+                Logger::get('http')->error('HTTP请求失败[' . curl_errno($curl) . ']: ' . curl_error($curl), [
                     'method' => $method,
                     'url' => $url,
                     'body' => $body
                 ]);
-                throw new \RuntimeException("HTTP请求失败: " . curl_error($curl));
+                throw new \RuntimeException('HTTP请求失败[' . curl_errno($curl) . ']: ' . curl_error($curl));
             }
         } finally {
             curl_close($curl);
