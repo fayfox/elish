@@ -21,7 +21,7 @@ class Logger
             $logger = new \Monolog\Logger($name);
             if ($file_handler) {
                 //初始化一个记录到文件的handler
-                $fileHandler = new StreamHandler(__DIR__ . "/../../../runtimes/logs/{$name}-" . date('Y-m-d') . '.log');
+                $fileHandler = new StreamHandler(BASEPATH . "runtimes/logs/{$name}-" . date('Y-m-d') . '.log');
                 //默认行尾会有2个空数组JSON，这里指定一下若为空不写进日志
                 $fileHandler->setFormatter(new LineFormatter(null, null, true, true));
                 $logger->pushHandler($fileHandler);
