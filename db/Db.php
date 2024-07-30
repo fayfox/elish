@@ -118,6 +118,88 @@ class Db
     }
 
     /**
+     * 批量插入（要求二维数组所有数组项结构一致）
+     * @param string $table 表名
+     * @param array $data 插入数据
+     * @return int
+     */
+    public function batchInsert($table, $data){
+        $fields = [];
+        $pres = [];
+        $values = [];
+        $bulk = [];
+        //取第一项构造fields
+        $first_item = array_shift($data);
+        foreach($first_item as $k => $v){
+            if($v === false)continue;
+            if($v instanceof Expr){
+                $fields[] = "`{$k}`";
+                $pres[] = $v->get();
+            }else{
+                $fields[] = "`{$k}`";
+                $pres[] = '?';
+                $values[] = $v;
+            }
+        }
+        $bulk[] = implode(',', $pres);
+        foreach($data as $item){
+            $pres = [];
+            foreach($item as $i){
+                if($i instanceof Expr){
+                    $pres[] = $i->get();
+                }else{
+                    $pres[] = '?';
+                    $values[] = $i;
+                }
+            }
+            $bulk[] = implode(',', $pres);
+        }
+        $sql = "INSERT INTO {$table} (".implode(',', $fields).') VALUES ('.implode("),\n(", $bulk).')';
+        return $this->execute($sql, $values);
+    }
+
+    /**
+     * 批量插入（要求二维数组所有数组项结构一致）
+     * @param string $table 表名
+     * @param array $data 插入数据
+     * @return int
+     */
+    public function batchInsertIgnore($table, $data){
+        $fields = [];
+        $pres = [];
+        $values = [];
+        $bulk = [];
+        //取第一项构造fields
+        $first_item = array_shift($data);
+        foreach($first_item as $k => $v){
+            if($v === false)continue;
+            if($v instanceof Expr){
+                $fields[] = "`{$k}`";
+                $pres[] = $v->get();
+            }else{
+                $fields[] = "`{$k}`";
+                $pres[] = '?';
+                $values[] = $v;
+            }
+        }
+        $bulk[] = implode(',', $pres);
+        foreach($data as $item){
+            $pres = [];
+            foreach($item as $i){
+                if($i instanceof Expr){
+                    $pres[] = $i->get();
+                }else{
+                    $pres[] = '?';
+                    $values[] = $i;
+                }
+            }
+            $bulk[] = implode(',', $pres);
+        }
+        $sql = "INSERT IGNORE INTO {$table} (".implode(',', $fields).') VALUES ('.implode("),\n(", $bulk).')';
+        return $this->execute($sql, $values);
+    }
+
+    /**
      * 更新符合条件的记录
      * @param string $table 表名
      * @param array $data 数据
