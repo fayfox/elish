@@ -2,6 +2,8 @@
 
 namespace elish\db;
 
+use elish\core\Logger;
+
 class Db
 {
     private static array $_instance = [];
@@ -72,6 +74,7 @@ class Db
             $sth = $this->pdo->prepare($sql);
             $sth->execute($params);
         } catch (\PDOException $e) {
+            Logger::get()->error("SQL: {$sql}; PARAMS: " . json_encode($params) . "; ERROR: " . $e->getMessage());
             throw $e;
         }
 
@@ -84,6 +87,7 @@ class Db
             $sth = $this->pdo->prepare($sql);
             $sth->execute($params);
         } catch (\PDOException $e) {
+            Logger::get()->error("SQL: {$sql}; PARAMS: " . json_encode($params) . "; ERROR: " . $e->getMessage());
             throw $e;
         }
 
@@ -336,6 +340,7 @@ class Db
             $sth = $this->pdo->prepare($sql);
             $sth->execute($params);
         } catch (\PDOException $e) {
+            Logger::get()->error("SQL: {$sql}; PARAMS: " . json_encode($params) . "; ERROR: " . $e->getMessage());
             throw $e;
         }
 
