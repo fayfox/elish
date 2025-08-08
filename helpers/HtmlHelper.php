@@ -215,9 +215,9 @@ class HtmlHelper
                     $pre = '';
                 }
                 if ($i == $data_length && empty($d['children'])) {
-                    $return[$d[$key]] = $pre . '└' . HtmlHelper::encode($d[$value]);
+                    $return[$d[$key]] = $pre . '└ ' . HtmlHelper::encode($d[$value]);
                 } else {
-                    $return[$d[$key]] = $pre . '├' . HtmlHelper::encode($d[$value]);
+                    $return[$d[$key]] = $pre . '├ ' . HtmlHelper::encode($d[$value]);
                 }
             } else {
                 $return[$d[$key]] = HtmlHelper::encode($d[$value]);
