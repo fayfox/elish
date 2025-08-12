@@ -82,7 +82,7 @@ class Request
      */
     public static function getScheme()
     {
-        return self::getServer('HTTPS') == 'on' ? 'https' : 'http';
+        return self::getServer('HTTPS') == 'on' || self::getServer('HTTP_X_FORWARDED_PROTO') == 'https' ? 'https' : 'http';
     }
 
     /**
