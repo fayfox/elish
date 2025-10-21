@@ -68,6 +68,53 @@ class Db
         $this->pdo->exec("SET NAMES {$configs['charset']}");
     }
 
+    /**
+     * 开启事务
+     * @return bool
+     */
+    public function beginTransaction(): bool
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * 提交事务
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * 回滚事务
+     * @return bool
+     */
+    public function rollback(): bool
+    {
+        return $this->pdo->rollback();
+    }
+
+    /**
+     * 基于闭包的事务方法
+     * @param callable $callback 在事务中执行的回调函数
+     * @return mixed 回调函数的返回值
+     * @throws \Throwable
+     */
+    public function transaction(callable $callback)
+    {
+        $this->beginTransaction();
+
+        try {
+            $result = $callback($this);
+            $this->commit();
+            return $result;
+        } catch (\Throwable $e) {
+            $this->rollback();
+            throw $e;
+        }
+    }
+
     public function fetchAll($sql, $params = [])
     {
         try {
