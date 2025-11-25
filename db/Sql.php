@@ -80,7 +80,11 @@ class Sql
     public function from($table, $fields = '*')
     {
         if (is_array($table)) {
-            list($a, $t) = each($table);
+            foreach ($table as $key => $val) {
+                $a = $key;
+                $t = $val;
+                break;
+            }
             if (is_string($a)) {
                 $alias = $a;
             } else {
