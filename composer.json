@@ -11,14 +11,14 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": "^8.0",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-zip": "*",
     "ext-pdo": "*",
     "ext-openssl": "*",
     "gregwar/captcha": "^1.1",
-    "illuminate/validation": "^8.83",
+    "illuminate/validation": "^9.52",
     "monolog/monolog": "^2.9"
   },
   "autoload": {
