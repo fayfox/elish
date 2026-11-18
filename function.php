@@ -2,6 +2,7 @@
 
 use elish\core\ErrorHandler;
 use elish\core\Logger;
+use elish\exception\NotFoundException;
 
 // 如果是在vendor目录下，定义BASEPATH
 if (!defined('BASEPATH') && basename(dirname(__DIR__, 2)) == 'vendor') {
@@ -139,7 +140,7 @@ function render(string $__view_file__, array $__data__ = []): string
     } else if (file_exists($__base__path__ . 'web/' . $__view_file__ . '/index.php')) {
         require $__base__path__ . 'web/' . $__view_file__ . '/index.php';
     } else {
-        throw new RuntimeException("视图[{$__view_file__}]不存在");
+        throw new NotFoundException("页面[{$__view_file__}]不存在");
     }
 
     $content = ob_get_contents();
