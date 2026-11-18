@@ -16,12 +16,10 @@ class R
      */
     public static function msg($msg)
     {
-        header('Content-Type: application/json');
-        echo json_encode([
+        self::json([
             'code' => 0,
             'msg' => $msg
         ]);
-        die;
     }
 
     /**
@@ -30,26 +28,37 @@ class R
      */
     public static function data($data)
     {
-        header('Content-Type: application/json');
-        echo json_encode([
+        self::json([
             'code' => 0,
             'data' => $data
         ]);
-        die;
     }
 
     /**
-     * 返回成功消息
+     * 返回错误消息
      * @param string $msg
      * @param int $code 状态码
      */
     public static function error(string $msg, $code = 10000)
     {
-        header('Content-Type: application/json');
-        echo json_encode([
+        self::json([
             'code' => $code,
             'msg' => $msg
         ]);
+    }
+
+    /**
+     * 输出 JSON。nginx 下发了 X-Request-Id 时，追加 traceId
+     * @param array $payload
+     */
+    private static function json(array $payload)
+    {
+        header('Content-Type: application/json');
+        $requestId = $_SERVER['HTTP_X_REQUEST_ID'] ?? '';
+        if ($requestId !== '') {
+            $payload['traceId'] = $requestId;
+        }
+        echo json_encode($payload);
         die;
     }
 
