@@ -160,14 +160,20 @@ class Request
     /**
      * 获取用户IP
      * 此方法会选择信任HTTP_X_FORWARDED_FOR字段，也就是说，得到的IP可能是伪造的
+     * 经过Cloudflare时该字段会有多个IP，最后一个是Cloudflare的IP，需要排除
      * @return string|null
      */
     public static function getUserIP()
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $arr = explode(', ', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $arr = array_values(array_filter(array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])), static function ($ip) {
+                return $ip !== '';
+            }));
+            //多个IP说明经过了Cloudflare，最后一个是Cloudflare的IP
+            if (count($arr) > 1) {
+                array_pop($arr);
+            }
             foreach ($arr as $ip) {
-                $ip = trim($ip);
                 //此验证器会判断必须是ip格式，且非内网IP
                 if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
                     return $ip;
